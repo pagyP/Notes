@@ -51,3 +51,15 @@ https://talkingazure.com/posts/the-missing-settings-in-dsc-security-baseline-con
            [several days later]
            $ git push http://example.com/repo.git
            [your credentials are used automatically]
+
+           Don’t worry! You can easily change this behavior and enable right-click on Ubuntu 18.04. Let me show you how to do that.
+           You need to install GNOME Tweaks tool first. It is available in Ubuntu Software Center.
+Install GNOME Tweaks in Ubuntu
+
+Alternatively, you can install it using the command below:
+
+sudo apt install gnome-tweaks
+
+Once installed, press Super/Windows key to open the Application menu and search for ‘tweaks’. Click on Tweaks to start the program.
+GNOME Tweaks tool in Ubuntu 17.10
+In the GNOME Tweaks, go to Keyboard & Mouse in the left sidebar and under Mouse Click Emulation section, select Area.
