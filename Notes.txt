@@ -1,0 +1,41 @@
+Hello Paul,
+
+ 
+
+Welcome to DigiCert! I had a look at your account and can see that it's already been enabled for the MVP program. I hope that as you get a feel for the DigiCert system, you come to see how DigiCert can be an asset in your professional and lab environments.
+
+ 
+
+Your MVP Benefits include the following:
+
+    * Free Geotrust Cloud DV certificates (note that this is the only free SSL certificate, and can be found under the “Request a Certificate" menu)
+
+    * Rest API Access
+
+    * Access to CertCentral
+
+ 
+
+We have used the GeoTrust Cloud DV cert as the default MVP product, as it’s very versatile and can support names with the Wildcard character (as well as names without).  If the Wildcard character is needed, this can simply be input into the Common Name or SAN field on the order request (ie. CN =*.domain.com).   
+
+   
+
+We strive to provide every customer a top-level customer service experience. If you have any concerns as you use our systems and communicate with our teams, please feel free to reach out to mvp@digicert.com.  I hope you have a great experience with DigiCert and we look forward to working with you.
+
+ 
+
+Thanks and have a good one!
+
+https://github.com/azure/vdc
+
+https://azsk.azurewebsites.net/
+
+https://openvim.com/
+
+https://linuxconfig.org/bash-scripting-tutorial-for-beginners?fbclid=IwAR3pF9LpL7GM2RaGPMvxZIPKrKCiJmdEW6lFSzsjg-RLLON0pPE9c1VT3ZI#h13-functions
+
+https://www.microsoft.com/en-us/security/technology/threat-protection
+
+https://talkingazure.com/posts/the-missing-settings-in-dsc-security-baseline-configuration/
+
+ https://github.com/themichaelbender/azure-cloud-shell
