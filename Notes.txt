@@ -39,3 +39,5 @@ https://www.microsoft.com/en-us/security/technology/threat-protection
 https://talkingazure.com/posts/the-missing-settings-in-dsc-security-baseline-configuration/
 
  https://github.com/themichaelbender/azure-cloud-shell
+
+ 
