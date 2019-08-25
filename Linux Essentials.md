@@ -366,3 +366,43 @@ Next, each set of tests are executed as a pattern match terminated by a closing 
 The * pattern is the same as an else because it matches anything. The behavior of the case statement is similar to the if/elif/else statement in that processing stops after the first match. If none of the other options matched, the * ensures that the last one will match.
 
 With a solid understanding of conditionals you can have your scripts take actions only if necessary.
+
+# Loops
+Loops allow code to be executed repeatedly. They can be useful in numerous situations, such as when you want to run the same commands over each file in a directory, or repeat some action 100 times. There are two main loops in shell scripts: the for loop and the while loop.
+
+for loops are used when you have a finite collection over which you want to iterate, such as a list of files, or a list of server names:
+
+#!/bin/bash
+
+SERVERS="servera serverb serverc"
+for S in $SERVERS; do
+  echo "Doing something to $S"
+done
+The script first sets a variable containing a space separated list of server names. The for statement then loops over the list of servers, each time it sets the S variable to the current server name. The choice of S was arbitrary, but note that the S has no dollar sign but the $SERVERS does, showing that $SERVERS will be expanded to the list of servers. The list does not have to be a variable. This example shows two more ways to pass a list.
+
+#!/bin/bash
+
+for NAME in Sean Jon Isaac David; do
+  echo "Hello $NAME"
+done
+
+for S in *; do
+  echo "Doing something to $S"
+done
+The first loop is functionally the same as the previous example, except that the list is passed to the for loop directly instead of using a variable. Using a variable helps the clarity of the script as someone can easily make changes to the variable rather than looking at a loop.
+
+The second loop uses a * which is a file glob. This gets expanded by the shell to all the files in the current directory.
+
+The other type of loop, a while loop, operates on a list of unknown size. Its job is to keep running and on each iteration perform a test to see if it should run another time. You can think of it as “while some condition is true, do stuff.”
+
+#!/bin/bash
+
+i=0
+while [ $i -lt 10 ]; do
+  echo $i
+  i=$(( $i + 1))
+done
+echo “Done counting”
+The example above shows a while loop that counts from 0 to 9. A counter variable, i, is initialized to 0. Then a while loop is run with the test being “is $i less than 10?” Note that the while loop uses the same notation as an if statement!
+
+Within the while loop the current value of i is echoed and then 1 is added to it through the $(( arithmetic )) command and assigned back into i. Once i becomes 10 the while statement returns false and processing continues after the loop.
