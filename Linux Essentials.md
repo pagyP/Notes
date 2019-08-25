@@ -192,3 +192,177 @@ sysadmin@localhost:~$ cat newexample.txt
 /ETC/PPP:
 IP-DOWN.D
 IP-UP.D
+
+
+# Basic Regular Expressions
+* Regular expressions, also referred to as regex, are a collection of normal and special characters that are used to find simple or complex patterns, respectively, in files. These characters are characters that are used to perform a particular matching function in a search.
+
+* Normal characters are alphanumeric characters which match themselves. For example, an a would match an a. Special characters have special meanings when used within patterns by commands like the grep command. They behave in a more complex manner and do not match themselves.
+
+* There are both Basic Regular Expressions (available to a wide variety of Linux commands) and Extended Regular Expressions (available to more advanced Linux commands). Basic Regular Expressions include the following:
+
+Character	Matches
+.	Any single character
+[ ]	
+A list or range of characters to match one character
+
+If the first character within the brackets is the caret ^, it means any character not in the list
+
+*	The previous character repeated zero or more times
+^	If the first character in the pattern, the pattern must be at the beginning of the line to match, otherwise just a literal ^ character
+$	If the last character in the pattern, the pattern must be at the end of the line to match, otherwise just a literal $ character
+The grep command is just one of the many commands that support regular expressions. Some other commands include the more and less commands.
+
+* While some of the regular expressions are unnecessarily quoted with single quotes, it is good practice to use single quotes around regular expressions to prevent the shell from trying to interpret special meaning from them.
+
+* To redirect stderr (error messages) to a file, issue the following command:
+
+find /etc -name hosts 2> err.txt
+cat err.txt
+
+# Variables
+Variables are a key part of any programming language. A very simple use of variables is shown here:
+
+#!/bin/bash
+
+ANIMAL="penguin"
+echo "My favorite animal is a $ANIMAL"
+After the shebang line is a directive to assign some text to a variable. The variable name is ANIMAL and the equals sign assigns the string penguin. Think of a variable like a box in which you can store things. After executing this line, the box called ANIMAL contains the word penguin.
+
+It is important that there are no spaces between the name of the variable, the equals sign, and the item to be assigned to the variable. If you have a space there, you will get an odd error such as “command not found”. Capitalizing the name of the variable is not necessary but it is a useful convention to separate variables from commands to be executed.
+
+Next, the script echos a string to the console. The string contains the name of the variable preceded by a dollar sign. When the interpreter sees that dollar sign it recognizes that it will be substituting the contents of the variable, which is called interpolation. The output of the script is then My favorite animal is a penguin.
+
+So remember this: to assign to a variable, just use the name of the variable. To access the contents of the variable, prefix it with a dollar sign. Here, we show a variable being assigned the contents of another variable!
+
+#!/bin/bash
+
+ANIMAL=penguin
+SOMETHING=$ANIMAL
+echo "My favorite animal is a $SOMETHING"
+ANIMAL contains the string penguin (as there are no spaces; in this example, the alternative syntax without using quotes is shown). SOMETHING is then assigned the contents of ANIMAL (because ANIMAL has the dollar sign in front of it).
+
+If you wanted, you could assign an interpolated string to a variable. This is quite common in larger scripts, as you can build up a larger command and execute it!
+
+Another way to assign to a variable is to use the output of another command as the contents of the variable by enclosing the command in back ticks:
+
+#!/bin/bash
+CURRENT_DIRECTORY=`pwd`
+echo "You are in $CURRENT_DIRECTORY"
+This pattern is often used to process text. You might take text from one variable or an input file and pass it through another command like sed or awk to extract certain parts and keep the result in a variable. The sed command is used to edit streams (STDIN) and the awk command is used for scripting. These commands are beyond the scope of this course.
+
+It is possible to get input from the user of your script and assign it to a variable through the read command:
+
+#!/bin/bash
+
+echo -n "What is your name? "
+read NAME
+echo "Hello $NAME!"
+The read command can accept a string right from the keyboard or as part of command redirection like you learned in the last chapter.
+
+There are some special variables in addition to the ones you set. You can pass arguments to your script:
+
+#!/bin/bash
+echo "Hello $1"
+A dollar sign followed by a number N corresponds to the Nth argument passed to the script. If you call the example above with ./test.sh the output will be Hello Linux. The $0 variable contains the name of the script itself.
+
+After a program runs, be it a binary or a script, it returns an exit code which is an integer between 0 and 255. You can test this through the $? variable to see if the previous command completed successfully.
+
+sysadmin@localhost:~$ grep -q root /etc/passwd
+sysadmin@localhost:~$ echo $?
+0
+sysadmin@localhost:~$ grep -q slartibartfast /etc/passwd
+sysadmin@localhost:~$ echo $?
+1
+The grep command was used to look for a string within a file with the –q flag, which means “quiet”. The grep, while running in quiet mode, returns 0 if the string was found and 1 otherwise. This information can be used in a conditional to perform an action based on the output of another command.
+
+Likewise you can set the exit code of your own script with the exit command:
+
+#!/bin/bash
+# Something bad happened!
+exit 1
+The example above shows a comment #. Anything after the hash mark is ignored, which can be used to help the programmer leave notes. The exit 1 returns exit code 1 to the caller. This even works in the shell, if you run this script from the command line and then type echo $? you will see it returns 1.
+
+By convention, an exit code of 0 means “everything is OK”. Any exit codes greater than 0 mean some kind of error happened, which is specific to the program. Above you saw that grep uses 1 to mean the string was not found.
+
+# Conditionals
+Now that you can look at and set variables, it is time to make your script do different functions based on tests, called branching. The if statement is the basic operator to implement branching.
+
+A basic if statement looks like this:
+
+if somecommand; then
+  # do this if somecommand has an exit code of 0
+fi
+The next example will run “somecommand” (actually, everything up to the semicolon) and if the exit code is 0 then the contents up until the closing fi will be run. Using what you know about grep, you can now write a script that does different things based on the presence of a string in the password file:
+
+#!/bin/bash
+
+if grep -q root /etc/passwd; then
+  echo root is in the password file
+else
+  echo root is missing from the password file
+fi
+From previous examples, you might remember that the exit code of grep is 0 if the string is found. The example above uses this in one line to print a message if root is in the password file or a different message if it isn’t. The difference here is that instead of an fi to close off the if block, there’s an else. This lets you do one action if the condition is true, and another if the condition is false. The else block must still be closed with the fi keyword.
+
+Other common tasks are to look for the presence of a file or directory and to compare strings and numbers. You might initialize a log file if it doesn’t exist, or compare the number of lines in a file to the last time you ran it. The if command is clearly the one to help here, but what command do you use to make the comparison?
+
+The test command gives you easy access to comparison and file test operators. For example:
+
+Command	Description
+test –f /dev/ttyS0	0 if the file exists
+test ! –f /dev/ttyS0	0 if the file doesn’t exist
+test –d /tmp	0 if the directory exists
+test –x `which ls`	substitute the location of ls then test if the user can execute
+test 1 –eq 1	0 if numeric comparison succeeds
+test ! 1 –eq 1	NOT – 0 if the comparison fails
+test 1 –ne 1	Easier, test for numeric inequality
+test “a” = “a”	0 if the string comparison succeeds
+test “a” != “a”	0 if the strings are different
+test 1 –eq 1 –o 2 –eq 2	-o is OR: either can be the same
+test 1 –eq 1 –a 2 –eq 2	-a is AND: both must be the same
+It is important to note that test looks at integer and string comparisons differently. 01 and 1 are the same by numeric comparison, but not by string comparison. You must always be careful to remember what kind of input you expect.
+
+There are many more tests, such as –gt for greater than, ways to test if one file is newer than the other, and many more. Consult the test man page for more.
+
+test is fairly verbose for a command that gets used so frequently, so there is an alias for it called [ (left square bracket). If you enclose your conditions in square brackets, it’s the same as running test. So, these statements are identical.
+
+if test –f /tmp/foo; then
+if [ -f /tmp/foo]; then
+While the latter form is most often used, it is important to understand that the square bracket is a command on its own that operates similarly to test except that it requires the closing square bracket.
+
+The if statement has a final form that lets you do multiple comparisons at one time using elif (short for else if).
+
+#!/bin/bash
+
+if [ "$1" = "hello" ]; then
+  echo "hello yourself"
+elif [ "$1" = "goodbye" ]; then
+  echo "nice to have met you"
+  echo "I hope to see you again"
+else
+  echo "I didn't understand that"
+fi
+The code above compares the first argument passed to the script. If it is hello, the first block is executed. If not, the script checks to see if it is goodbye and echos a different message if so. Otherwise, a third message is sent. Note that the $1 variable is quoted and the string comparison operator is used instead of the numeric version (-eq).
+
+The if/elif/else tests can become quite verbose and complicated. The case statement provides a different way of making multiple tests easier.
+
+#!/bin/bash
+
+case "$1" in
+hello|hi)
+  echo "hello yourself"
+  ;;
+goodbye)
+  echo "nice to have met you"
+  echo "I hope to see you again"
+  ;;
+*)
+  echo "I didn't understand that"
+esac
+The case statement starts off with a description of the expression being tested: case EXPRESSION in. The expression here is the quoted $1.
+
+Next, each set of tests are executed as a pattern match terminated by a closing parenthesis. The previous example first looks for hello or hi; multiple options are separated by the vertical bar | which is an OR operator in many programming languages. Following that are the commands to be executed if the pattern returns true, which are terminated by two semicolons. The pattern repeats.
+
+The * pattern is the same as an else because it matches anything. The behavior of the case statement is similar to the if/elif/else statement in that processing stops after the first match. If none of the other options matched, the * ensures that the last one will match.
+
+With a solid understanding of conditionals you can have your scripts take actions only if necessary.
